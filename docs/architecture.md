@@ -75,6 +75,9 @@ DST wall times. Notes without a date preserve the current schedule.
 The shadcn Calendar/Popover date picker uses `TZDate` and the app timezone,
 independently of the browser timezone. `TimePicker` composes existing shadcn
 Selects for hour, minute and AM/PM; it uses no native `type="time"` control.
+The date/time fields stack below `sm`, then share aligned labels and 44px controls.
+Time segment labels stay screen-reader accessible; empty selects show Hour/Minute
+hints rather than adding another visible label row.
 `lib/time-input.ts` handles 12/24-hour conversion and retains partial selections.
 The parent combines date and time; server validation rejects incomplete selections
 before UTC conversion. Display state follows the controlled value, so successful

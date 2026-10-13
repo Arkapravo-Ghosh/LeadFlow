@@ -383,3 +383,42 @@ The private-value source/history scan passed. All disposable time-picker Compose
 services and their tmpfs database were removed. Production credential/write
 flows were not exercised; the authenticated UI evidence above comes from the
 local production images.
+
+## Date/time alignment and expanded responsive review — 14 October 2026
+
+The earlier desktop check verified bounds and interactions but missed the extra
+time-label row and mismatched date/time heights. The form now uses one visible
+heading per field, screen-reader labels for each time segment, Hour/Minute empty
+hints, and aligned 44px controls. Mobile keeps the date/time groups stacked.
+The original shadcn preset, global CSS and private backend environment are unchanged.
+
+Chrome/Playwright exercised local production images with real FastAPI/PostgreSQL
+in the disposable `leadflow-layout-smoke` Compose project on port 3002:
+
+- Blank, filled and validation-error follow-up forms in both themes at 320×568,
+  375×812, 390×844, 640×800, 768×1024, 1024×768, 1366×768, 1440×1000 and 1920×1080.
+  Geometry assertions checked identical date/time top positions and heights when
+  side by side, stacked mobile groups, viewport bounds and minimum target height.
+- Calendar and all three time menus stayed inside each viewport. Escape focus,
+  keyboard minute selection, incomplete-draft retention and pending disabled
+  states passed. Saving/reloading 01:34 PM persisted the expected PostgreSQL UTC
+  instant `2026-10-24T08:04:00+00:00`. Screenshots of mobile, tablet and desktop
+  in both themes were inspected outside the repositories.
+- Landing/login/sign-up, workspace filters/search, all seven statuses, long lead
+  names/company text, add-lead and timeline dialogs also passed those nine widths
+  in both themes. Save Note remained reachable by scrolling on short mobile screens.
+- ESLint, generated route types/TypeScript, all 20 frontend unit tests and the
+  production Docker build passed. No unexpected console/runtime/hydration errors
+  appeared; private-flow browser requests stayed on the frontend origin.
+
+The Browser plugin was unavailable, so regular Chrome/Playwright was used. These
+are viewport emulations; physical devices, Safari and screen readers were not
+verified. Test credentials were generated only in memory and the temporary DB;
+no production accounts/leads were created.
+
+Vercel CI/CD deployment `dpl_2aaPQrHBLonPKK7xdomXQ6YMTSHA` reported **READY**
+for frontend commit `21465569fd770f58e558bbbb22fb71ea0645a196`. Read-only
+landing/login/sign-up checks on the production domain passed all nine widths in
+both themes without unexpected console/runtime/hydration errors. Authenticated
+form checks were local; production accounts/leads were not modified. The temporary
+Compose project and its tmpfs database were removed after verification.

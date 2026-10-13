@@ -42,7 +42,8 @@ and does not consume the Neon URL in `backend/.env`.
 Choose **Create account** on `/login`, or open `/signup`. Enter a username, a
 12–128 character password and its confirmation. Registration signs you in
 automatically to your own empty workspace. Existing users sign in at `/login`.
-The public homepage explains LeadFlow before sign-up. Your private lead manager
+The public homepage explains LeadFlow before sign-up. Follow-up scheduling uses
+themed date and time controls that align on tablet/desktop and stack on mobile. Your private lead manager
 is at `/workspace`, and successful sign-in or sign-up opens it automatically.
 The administrator CLI `docker compose exec backend uv run leadflow-create-user`
 remains available for private provisioning and legacy data claims.
