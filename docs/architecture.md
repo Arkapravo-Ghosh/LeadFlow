@@ -29,6 +29,12 @@ states, and disable animation for reduced-motion preferences. Pending controls
 stay disabled through completion; auth navigation retains its spinner until
 the next document loads. No minimum artificial loading delay is added.
 
+The toolbar shares one status value between compact Select and desktop
+ToggleGroup presentations. CSS selects the layout at the `lg` breakpoint;
+no browser-width branch or forced remount is used. Mobile rows stack, tablet
+selectors sit side by side, and desktop buttons wrap instead of clipping in a
+scroll strip. Lead names/company text wrap within the card on narrow screens.
+
 Frontend `features/leads/server` owns reads/actions. `lib/server` is marked
 `server-only`; validated actions return data and safe messages, never credentials.
 OpenAPI-generated types describe API responses. Client components own interaction
@@ -66,6 +72,16 @@ scheduled instant with the server clock. They can overlap without duplication.
 Today's leads sort by due time, then overdue leads, then recent discussions.
 Local datetime input is converted with Temporal and rejects ambiguous/nonexistent
 DST wall times. Notes without a date preserve the current schedule.
+The shadcn Calendar/Popover date picker uses `TZDate` and the app timezone,
+independently of the browser timezone. A separate time field composes the local
+datetime; server validation rejects incomplete selections before UTC conversion.
+
+## Public discovery
+
+`lib/site-metadata.ts` shares environment-derived URLs across canonical tags,
+Open Graph/Twitter cards, JSON-LD, robots and sitemap. Only the public homepage
+opts into indexing. The thumbnail is the owner's supplied dark landing PNG;
+private session/lead data never enters metadata. See [SEO](seo.md).
 
 ## Readability
 

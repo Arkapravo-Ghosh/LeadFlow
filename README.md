@@ -78,10 +78,13 @@ keeps data; adding `--volumes` deletes the local database.
   and pin today's follow-ups.
 - Red overdue cues, latest note previews, relative times and discussion timeline.
 - Save notes and optional follow-ups atomically; change status immediately.
+- Themed shadcn calendar and time field for follow-ups in the configured timezone.
 - Light/dark/system support using the original shadcn palette and typography.
 - Public landing page with example workflow, shared LeadFlow logo and favicon.
+- Public-page SEO metadata, dark landing screenshot for social previews, sitemap and robots.
 - Animated form/workspace/timeline skeletons and pending-action spinners; reduced-motion support.
 - Keyboard-accessible dialogs, inline validation, retry feedback, responsive UI.
+- Mobile/tablet status selectors and wrapping desktop filters; long lead text wraps on phones.
 
 Follow-ups use UTC storage and `APP_TIMEZONE` for calendar input/display. A note
 without a new date preserves the lead's current follow-up. Today and overdue may

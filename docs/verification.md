@@ -284,3 +284,58 @@ committed assets. Frontend and backend health returned 200; the API reported
 frontend origin, and no console/runtime/hydration errors appeared. No production
 accounts or lead writes were used. All disposable QA containers were removed;
 the original three local Compose services remain healthy.
+
+## SEO, themed date picker and responsive filters — 14 October 2026
+
+The owner-provided `screenshot-1791920524884.png` was copied byte-for-byte to
+`frontend/public/leadflow-social.png` (3584×1880). The root copy was deleted only
+after `cmp` verified equality, at the owner's request. Open Graph/Twitter cards
+share that PNG. Canonical, public indexing policy, WebSite/WebApplication JSON-LD,
+`/sitemap.xml` and `/robots.txt` use the build-time `APP_URL`. Private/account
+routes remain noindex and excluded from crawl files; auth remains enforced.
+
+The shadcn MCP registry search found `date-picker-demo` and supplied its component
+add command. Calendar and Popover were installed using the existing Base UI
+preset and Remix icons. The implementation uses the documented composition,
+plus a time field and timezone-aware `TZDate`. Generated day-button refs were
+connected for keyboard focus. Popovers reserve an 8px viewport margin and limit
+height to available space. Incomplete datetime selections are rejected before
+Temporal converts the displayed zone to UTC.
+
+The horizontal status scroll strip was replaced with mobile/tablet Selects and
+wrapping desktop buttons. Both share one filter state through CSS breakpoints.
+Header controls, landing actions/headline, lead-card text and loading placeholders
+also adapt to narrow widths. Long unbroken company text no longer widens a card.
+
+| Check | Result |
+| --- | --- |
+| ESLint, Next route types + TypeScript | Passed |
+| Frontend unit tests | 13 passed: previous six date/DST cases plus calendar-day preservation, Kolkata UTC conversion and incomplete selections |
+| Production build / Linux Docker install | Passed with `npm ci`; unchanged peer-check-compatible Node types; static robots/sitemap generated |
+| SEO runtime | Canonical, OG/Twitter tags and image dimensions, JSON-LD, Googlebot-visible head, XML sitemap, robots exclusions, noindex account pages and 404 response passed |
+| Calendar behavior | Selection, keyboard day navigation, Escape/focus return, missing-date error with draft retained, real PostgreSQL persistence and no-date note schedule preservation passed |
+| Timezone mismatch | A Los Angeles browser selected 24 Oct 2026 at 13:03 in Asia/Kolkata; expected UTC conversion was unit-tested and the persisted UI time survived reload |
+| Responsive pages | Landing/login/signup: 320×568, 375×812, 390×844, 768×1024, 1024×768 and 1440×1000; no horizontal page overflow or controls outside the viewport |
+| Responsive workspace | Every status option, follow-up/search, long names/company text, add/timeline dialogs, reachable Save Note, retained draft and on-screen calendar at all six widths |
+| Breakpoint changes | Qualified status persisted when switching mobile Select → desktop buttons → tablet Select |
+| Browser health | No unexpected console, runtime or hydration errors; requests remained on the frontend origin |
+| Preservation | Original shadcn theme/preset and backend `.env` hashes unchanged; private environment values absent from public files/history |
+
+Browser plugin was unavailable. Chrome/Playwright exercised production images at
+`http://localhost:3002` with a dedicated tmpfs PostgreSQL Compose project. Test
+accounts used randomly generated in-memory credentials. No populated credential
+screenshots or production account/lead mutations were used. Screenshot evidence
+was inspected outside the repositories. These are emulated viewport checks;
+physical devices, iOS Safari and third-party social-cache/indexing behavior were
+not verified. Backend source did not change; its suite was not rerun for this UI
+change. The existing dependency advisory described above remains unchanged.
+
+Vercel CI/CD reported deployment `dpl_21ytdiYjkbCfvSTcCAS4MbDjeCsd` **READY**
+for frontend commit `63fdb6c5c0b7502a0a5f7fc48e713c7da10f466e`.
+The actual domain passed the metadata/crawler-file checks and the public
+landing/login/signup layout checks at all six widths, without console/runtime
+or hydration errors. The deployed thumbnail matched the owner's supplied PNG
+byte-for-byte. No live account/lead writes were performed. Stable dark-mode
+mobile/tablet/desktop workspace screenshots were inspected from the local
+production images; transient closing menus were excluded from those captures.
+The disposable Compose project/database was removed after verification.
