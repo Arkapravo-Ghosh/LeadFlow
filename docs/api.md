@@ -1,12 +1,17 @@
 # API contract
 
-Domain routes require `X-API-Key`. FastAPI is called only by the Next.js server.
+All routes except health require `X-API-Key`. Lead/discussion routes and `/auth/me`
+also require `Authorization: Bearer <opaque session>`. Ownership comes from this
+session; foreign-user IDs return 404 and are never selectable through payloads. FastAPI is called only by the Next.js server.
 All routes use `/api/v1`; interactive docs and public OpenAPI routes are disabled.
 
 | Method / path | Behavior |
 | --- | --- |
 | GET `/health` | Unauthenticated readiness; 503 if DB unavailable |
-| GET `/leads` | Summary list; optional `status`, `search`, `timezone` |
+| POST `/auth/login` | Username/password; internal token + expiry + safe user summary; 401 invalid, 429 throttled |
+| GET `/auth/me` | Current user ID/username; 401 expired/missing/disabled session |
+| POST `/auth/logout` | Revoke bearer session; 204, idempotent |
+| GET `/leads` | Owned summary list; optional `status`, `search`, `timezone` |
 | POST `/leads` | Create: `name`, optional `company`/`phone`; starts New |
 | GET `/leads/{id}` | Lead summary, or 404 |
 | PATCH `/leads/{id}` | Update `status` |

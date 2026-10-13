@@ -1,7 +1,9 @@
 # LeadFlow
 
 A single-screen lead manager built with Next.js, the existing shadcn theme, FastAPI,
-SQLAlchemy and PostgreSQL. Browser requests use Next.js Server Actions; the API URL,
+SQLAlchemy and PostgreSQL. Username/password sign-in protects each user’s
+workspace. Browser requests use
+Next.js Server Actions and same-origin authentication routes; the API URL,
 service credential and database connection stay on the server.
 
 ## Repositories
@@ -32,10 +34,18 @@ Only Next.js has a host port. PostgreSQL persists in a named volume; FastAPI and
 PostgreSQL communicate on the Compose network. Development uses local PostgreSQL
 and does not consume the Neon URL in `backend/.env`.
 
-In another terminal, add deterministic sample leads:
+In another terminal, create your account. The password prompt does not echo or
+store plaintext credentials; choose your own username and password:
+
+```sh
+docker compose exec backend uv run leadflow-create-user
+```
+
+Sign in at `/login`. To add optional deterministic sample leads to that account:
 
 ```sh
 docker compose exec backend uv run leadflow-seed
+# Enter the account username when prompted.
 ```
 
 The seed supplies six leads covering every status, twelve discussions, today's
@@ -49,6 +59,7 @@ keeps data; adding `--volumes` deletes the local database.
 
 ## Features
 
+- Username/password login, Argon2id hashes, expiring/revocable sessions and per-user data.
 - Create a lead with required name and optional company/phone.
 - Search names, filter by all six statuses and Today/Overdue/Unscheduled,
   and pin today's follow-ups.
@@ -76,12 +87,13 @@ npm run build
 
 API tests use an isolated disposable PostgreSQL database, never the application
 or Neon database. See [verification](docs/verification.md) for actual results and
-screenshots. See [API](docs/api.md) for routes and generated client types.
+screenshots. See [authentication](docs/authentication.md) for account setup and legacy data.
+See [API](docs/api.md) for routes and generated client types.
 
 ## Structure and deployment
 
 - `frontend/`: Next.js App Router, server API boundary and focused UI components.
-- `backend/`: thin FastAPI routers, services, repositories, Alembic migrations.
+- `backend/`: account provisioning, password/session services, thin FastAPI routers, services, repositories, Alembic migrations.
 - `docs/`: architecture, API, deployment and verification.
 - `agentdocs/`: private original correspondence/images, excluded from public Git.
 - `compose.yaml`: frontend, backend, local PostgreSQL and isolated test services.

@@ -6,7 +6,7 @@ this is local production-image evidence, not a Render/Vercel/Neon deployment.
 
 | Check | Result |
 | --- | --- |
-| PostgreSQL integration suite | 25 passed: validation/statuses, literal search, timeline order, atomic rollback, date boundaries, seed idempotency |
+| PostgreSQL integration suite | 36 passed: auth/session expiry/revocation, login limits, ownership isolation, legacy claims and seed ownership plus prior domain cases |
 | Frontend unit suite | 6 passed: timezone conversion, ambiguous/nonexistent DST times, relative timestamps |
 | ESLint / TypeScript / Ruff | Passed |
 | Next.js production build | Passed; dynamic server-streamed workspace and server health route |
@@ -55,9 +55,9 @@ update when a compatible fix becomes available. Do not process untrusted glob
 patterns through those development tools.
 
 Starlette's test client emitted an upstream `httpx` deprecation warning; the
-integration assertions passed. The app is a shared assignment workspace without
-end-user login (optional in the brief). The three repositories are published on GitHub; DNS and cloud
-deployment remain for the owner. Provider-specific runtime behavior
+integration assertions passed. Username/password authentication and user-owned
+workspaces are now implemented. The three repositories are published on GitHub;
+DNS and cloud deployment remain for the owner. Provider-specific runtime behavior
 must be checked after deployment using the steps in deployment.md.
 
 ## AI assistance
@@ -87,3 +87,39 @@ and mobile 390×844 screenshots showed meaningful content and no error overlay.
 ESLint, TypeScript and the production build passed. Browser plugin not available;
 Playwright CLI was used. This targeted fix was checked in Chromium; other browser
 engines and a fresh cloud deployment were not exercised for this change.
+
+## Authentication — 13 October 2026
+
+The 36-case PostgreSQL suite includes Argon2id verification, canonical usernames,
+generic invalid-credential messages, persisted failed-login limits and expiry,
+disabled accounts, missing service/user credentials, session expiry, logout
+revocation, cross-account denial on every lead/discussion operation, ownership
+spoof rejection, legacy data claims and per-account seed idempotency. Alembic's
+metadata check detected no uncommitted schema operations.
+
+Production Docker images ran on an isolated Compose stack with a disposable
+PostgreSQL database and randomly generated temporary accounts. Chromium browser
+checks passed for anonymous redirects, masked password input, invalid login
+feedback, same-origin CSRF checks, authentication response redaction, HTTP-only /
+Secure / SameSite=Lax cookie attributes, cookie expiry, authenticated SSR,
+lead/note Server Actions, reload persistence, authenticated login-page redirect,
+session revocation and removal on logout, an empty second account's workspace,
+light/dark persistence, and 390×844 layout without horizontal overflow. Browser
+requests stayed on the frontend origin; no unexpected console, page or hydration
+errors occurred. One expected 401 network message came from the invalid-login test.
+
+The Playwright CLI inspected the development login page. An ad-hoc Playwright
+script exercised the production browser flow with temporary credentials held only
+in process memory, avoiding CLI recordings, traces and populated-form screenshots.
+The temporary Compose stack was removed after checks. The actual local sample
+account was created privately, its sign-in/hash verified, and all 7 existing leads
+and 16 discussions assigned without duplication. The documented interactive account-creation command also passed a PTY check
+with non-echoing password input; the account-specific seed CLI inserted six
+records and zero on repeat. No demo credential was used in browser recordings
+or written to a file. Production account provisioning on Neon
+remains an explicit owner task through the documented private CLI.
+
+ESLint, TypeScript, six frontend unit tests, Ruff, generated API types and the
+Next.js production build passed. Original theme/configuration and original backend
+`.env` hashes remained unchanged. Login/logout routes are dynamic; account data
+streams under Suspense with no server caching of user-specific responses.

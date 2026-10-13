@@ -6,8 +6,8 @@ in `globals.css` and the shadcn preset in `components.json` are preserved.
 
 ```mermaid
 flowchart LR
-  Browser -->|SSR / Server Actions| Next[Next.js / Vercel]
-  Next -->|HTTPS + private X-API-Key| API[FastAPI / Render]
+  Browser -->|HTTP-only cookie + same-origin POSTs| Next[Next.js / Vercel]
+  Next -->|HTTPS + private X-API-Key + bearer session| API[FastAPI / Render]
   API -->|SQLAlchemy + psycopg / TLS| DB[(PostgreSQL / Neon)]
 ```
 
@@ -28,6 +28,19 @@ repositories own queries. Latest-discussion selection uses a window query, avoid
 one query per lead. Row locks serialize writes per lead. Saving a note and updating
 its follow-up share a transaction. Errors roll back and use redacted messages.
 Alembic owns schema changes, never runtime `create_all`.
+
+## Authentication and ownership
+
+`backend/auth` owns Argon2id password verification, opaque session issuance,
+expiry/revocation, database-backed failed-login counters and private CLI provisioning.
+Only token digests persist in PostgreSQL. Next.js stores the bearer token in an
+HTTP-only cookie and forwards it from its server boundary; it never serializes
+the token into page props, action results or authentication JSON responses.
+Sign-in/out use Route Handlers so password values never enter Server Action
+argument diagnostics. Every domain request resolves a live, active user; all lead
+queries include that user’s ID and discussion access checks the parent’s ownership.
+No user-specific server caching is used. Login/logout hard navigation clears
+client/router state between accounts. See [authentication](authentication.md).
 
 ## Calendar rules
 
