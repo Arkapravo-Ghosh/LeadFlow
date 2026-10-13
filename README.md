@@ -52,6 +52,11 @@ The seed supplies six leads covering every status, twelve discussions, today's
 follow-ups and overdue dates. Running it again preserves existing records. It is
 explicitly opt-in; production startup never seeds data.
 
+Application services use `pull_policy: build`, so even plain `docker compose up`
+builds the current checkout before startup. Cached build layers are reused. This
+keeps startup migrations aligned with the persistent database after Watch sessions
+or Git updates. Use `docker compose up --watch` for ongoing file tracking.
+
 Compose syncs source edits; Next.js and Uvicorn reload them. Migration changes
 restart the API and dependency/Dockerfile changes rebuild the relevant image.
 Restart Compose after changing root environment variables. `docker compose down`

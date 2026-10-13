@@ -123,3 +123,24 @@ ESLint, TypeScript, six frontend unit tests, Ruff, generated API types and the
 Next.js production build passed. Original theme/configuration and original backend
 `.env` hashes remained unchanged. Login/logout routes are dynamic; account data
 streams under Suspense with no server caching of user-specific responses.
+
+
+## Compose startup regression — 13 October 2026
+
+A subsequent plain `docker compose up` reproduced an Alembic startup failure:
+the database was already at `0002`, while the saved development backend image
+contained only `0001`. Watch had synced new files into the previous running
+container, but those files were absent from the old image used to recreate it.
+
+The development backend and frontend now use `pull_policy: build`, which builds
+the current checkout before startup while reusing unchanged build layers. This
+keeps both applications current without requiring an explicit `--build` flag.
+The production Compose file and database volume configuration are unchanged.
+See [Docker's build policy](https://docs.docker.com/reference/compose-file/services/#pull_policy).
+
+`docker compose config --quiet` passed. `docker compose up -d --wait` without
+`--build` rebuilt the applications and reached healthy status for all three
+services. Alembic's current revision and code head both reported `0002`. The
+running backend used the newly built saved image. Frontend `/login` returned 200,
+and `/health` returned `ok`. The original account, all 7 owned leads and all 16
+discussions remained present; no data reset or migration stamp was used.
