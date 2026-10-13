@@ -1,0 +1,6 @@
+[submodule "frontend"]
+	path = frontend
+	url = ../LeadFlow-frontend.git
+[submodule "backend"]
+	path = backend
+	url = ../LeadFlow-backend.git
