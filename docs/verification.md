@@ -65,3 +65,25 @@ must be checked after deployment using the steps in deployment.md.
 Implementation, documentation and checks were developed with Codex assistance.
 The app contains no model training/inference feature; FastAPI implements the API.
 Results above distinguish actual local runtime checks from unperformed cloud work.
+
+## Hydration regression fix — 13 October 2026
+
+A subsequent check reproduced the reported theme-toggle attribute mismatch with
+a saved dark preference. The earlier theme persistence check missed this hydration
+warning. The server emitted a moon icon/dark-mode label while the client rendered
+a sun icon/light-mode label.
+
+The toggle now uses a deterministic server/hydration snapshot and a fixed-size
+neutral placeholder until hydration completes. It then renders the resolved theme
+icon, accessible label and title. No new hydration-warning suppression or theme
+token changes were introduced. See [React server snapshots](https://react.dev/reference/react/useSyncExternalStore#adding-support-for-server-rendering)
+and [next-themes hydration guidance](https://github.com/pacocoursey/next-themes#avoid-hydration-mismatch).
+
+Playwright on localhost:3001 checked saved light/dark (including opposite system
+preferences), system dark/light, toggling, and reload persistence. All four initial
+states plus reloads after toggling completed without console warnings/errors or
+page errors. Labels, titles, icons and document theme agreed. Desktop 1440×1000
+and mobile 390×844 screenshots showed meaningful content and no error overlay.
+ESLint, TypeScript and the production build passed. Browser plugin not available;
+Playwright CLI was used. This targeted fix was checked in Chromium; other browser
+engines and a fresh cloud deployment were not exercised for this change.
