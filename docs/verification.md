@@ -422,3 +422,30 @@ landing/login/sign-up checks on the production domain passed all nine widths in
 both themes without unexpected console/runtime/hydration errors. Authenticated
 form checks were local; production accounts/leads were not modified. The temporary
 Compose project and its tmpfs database were removed after verification.
+
+## Final original-brief audit — 14 October 2026
+
+Compared every core flow, quality/delivery item and all five bonus points with the
+original locally stored email. The [requirement matrix](requirements-audit.md)
+records each result; no missing feature was found. A fresh recursive public clone
+ran from example-based configuration with generated local secrets on port 3002.
+The actual seed CLI inserted 6 leads/12 discussions and then 0. Browser checks
+verified seeded summaries, pinning/red overdue, all statuses/search/schedule
+filters, New-default creation with optional fields, newest-first notes, immediate
+summary/schedule/status updates, UTC persistence, note-without-date preservation,
+reload and restart of all three services, and logout. Source sync and restoration
+through Compose Watch passed for frontend/backend. No source behavior changed.
+
+Ruff, ESLint, TypeScript, production build, 47 PostgreSQL tests and 20 frontend
+tests passed. The existing Starlette test-client deprecation warning remains.
+Both live health endpoints returned 200/status ok; read-only SEO/crawler checks
+passed. GitHub confirmed all three repositories are public. Current private
+environment values were absent from public files/history. All project commits
+follow Conventional Commits; the original Next scaffold commit is preserved.
+
+Browser plugin unavailable: used Chrome/Playwright, real local development Compose
+services and synthetic accounts with credentials held only in memory. No unexpected
+console/runtime/hydration errors; browser data requests stayed on the frontend
+origin. Fresh screenshots were inspected and packaged outside the repositories
+for submission. Private runtime flows were local; no production accounts/leads
+were changed. Physical-device/Safari/screen-reader checks remain unperformed.

@@ -43,8 +43,8 @@ Choose **Create account** on `/login`, or open `/signup`. Enter a username, a
 12–128 character password and its confirmation. Registration signs you in
 automatically to your own empty workspace. Existing users sign in at `/login`.
 The public homepage explains LeadFlow before sign-up. Follow-up scheduling uses
-themed date and time controls that align on tablet/desktop and stack on mobile. Your private lead manager
-is at `/workspace`, and successful sign-in or sign-up opens it automatically.
+themed date and time controls that align on tablet/desktop and stack on mobile.
+Your private lead manager is at `/workspace`, and successful sign-in or sign-up opens it automatically.
 The administrator CLI `docker compose exec backend uv run leadflow-create-user`
 remains available for private provisioning and legacy data claims.
 
@@ -106,7 +106,8 @@ npm run build
 
 API tests use an isolated disposable PostgreSQL database, never the application
 or Neon database. See [verification](docs/verification.md) for actual results and
-screenshots. See [authentication](docs/authentication.md) for account setup and legacy data.
+screenshots. See the [final assessment comparison](docs/requirements-audit.md)
+for the original requirements and bonus checklist. See [authentication](docs/authentication.md) for account setup and legacy data.
 See [API](docs/api.md) for routes and generated client types.
 
 ## Structure and deployment
