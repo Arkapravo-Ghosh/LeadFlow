@@ -57,8 +57,9 @@ patterns through those development tools.
 Starlette's test client emitted an upstream `httpx` deprecation warning; the
 integration assertions passed. Username/password authentication and user-owned
 workspaces are now implemented. The three repositories are published on GitHub;
-DNS and cloud deployment remain for the owner. Provider-specific runtime behavior
-must be checked after deployment using the steps in deployment.md.
+The owner has now deployed Vercel, Render and Neon at the domains documented in
+deployment.md. Historical checks below describe local runs; the sign-up section
+records the current deployment observations separately.
 
 ## AI assistance
 
@@ -162,3 +163,71 @@ passed `npm install` and `npm ci` with `legacy-peer-deps=false` and `force=false
 then ESLint, type checking, all 6 unit tests and the Next.js production build.
 The resulting lockfile matched the committed frontend lockfile. This is clean
 Linux install/build evidence; a new Vercel deployment was not manually triggered.
+
+## Self-service sign-up — 14 October 2026
+
+Added `/signup`, a linked shared sign-in/sign-up form, password confirmation,
+server validation, Argon2id hashing and automatic sign-in. New users receive an
+empty workspace. Existing demo data remains assigned to its original owner.
+Registration cannot claim legacy records or opt into seeding. No new migration
+is required: the current `0002` schema already contains users and session tables.
+
+- Backend Ruff lint/format checks passed. The Compose disposable PostgreSQL
+  suite passed **47 tests**, including 11 registration cases: secret redaction,
+  empty accounts, ownership, canonical duplicates, rejected short/long passwords
+  and extra ownership fields, private service-key enforcement, atomic rollback,
+  PostgreSQL unique-index conflicts and independent expiring rate limits.
+- Frontend ESLint, generated route types + TypeScript, all **6** existing date/DST
+  tests, and the Next.js production build passed. Node 24 production Docker
+  images built successfully with `npm ci`; Compose readiness passed for all
+  services. Development and optional production Compose configuration validated.
+- Browser plugin was not available; Playwright 1.64 with system Chrome exercised
+  production images at `http://localhost:3002` with a dedicated tmpfs PostgreSQL
+  database. Desktop 1440×1000 and mobile 390×844 showed the expected page,
+  readable fields, no horizontal overflow, no framework overlay and no unexpected
+  console, runtime or hydration errors. Blank-form screenshots were inspected
+  outside the public repositories; no populated credential forms were captured.
+- The browser flow passed login → sign-up → confirmation error → registration
+  → empty workspace → lead/note creation → logout → duplicate registration error
+  → second account with empty workspace → original account login with persisted
+  data. Authenticated sign-up redirects to the workspace. Light/dark toggles and
+  dark-mode reload passed. All browser requests remained on the frontend origin.
+- Direct frontend HTTP checks rejected missing/foreign origins, weak passwords,
+  mismatched confirmation and ownership spoofing. Successful registration returned
+  only `{ ok: true }`. HTTP-only/Secure/SameSite=Lax session cookies were verified,
+  inaccessible to JavaScript; logout removed cookies and all temporary sessions.
+  All three throwaway accounts stored Argon2id hashes. Credentials were generated
+  in process memory and discarded with the disposable database.
+- The shadcn theme/preset and private backend `.env` hashes are unchanged. The
+  public-source/history scan found no private database URL, service key, database
+  password or sample username. No production accounts or leads were created for QA.
+
+At the start of this change, the deployed frontend `/login` returned HTTP 200 and
+`https://api.leadflow.arkapravo.in/api/v1/health` returned `{ "status": "ok" }`.
+The owner reports Vercel/Render CI/CD configured; provider-specific deployment
+observations after the source push are recorded separately below. Local tests
+do not assert Vercel proxy-header behavior or production registration mutations.
+
+### Deployment observations after the sign-up source push
+
+The backend sign-up route became available on the configured API domain before
+the frontend was pushed (GET returns 405 with POST supported). Vercel reported
+production deployment `dpl_DVzNmZ8999nZyYjjDxoeuzqk3un8` **READY** for frontend
+commit `0b24e3ec345efbc7ff2b2219b19404a2a1e5a054`. Backend commit
+`0963726` was pushed first; no manual provider deployment was triggered.
+
+Chrome/Playwright then verified the actual custom domain:
+`https://leadflow.arkapravo.in/signup` displayed the account form with the correct
+title and working sign-in/sign-up links. Desktop and mobile screenshots were
+inspected. Dark mode persisted after reload, no horizontal overflow or framework
+overlay appeared, and console/runtime/hydration checks passed. Browser requests
+stayed on the frontend domain. Both frontend `/health` and API `/api/v1/health`
+returned HTTP 200; the API reported `status: ok`. Malformed sign-up requests from
+the configured origin returned 400; foreign-origin requests returned 403.
+These rejected payloads stop in Next.js before account creation.
+
+The complete credential/ownership flow was exercised against local production
+images, not by creating production test users. Production registration writes
+and Vercel's trusted proxy-IP behavior were not exercised. The original local
+database still contains one account, seven owned leads and sixteen discussions;
+all disposable QA services/database containers were removed.

@@ -1,10 +1,15 @@
 # LeadFlow
 
 A single-screen lead manager built with Next.js, the existing shadcn theme, FastAPI,
-SQLAlchemy and PostgreSQL. Username/password sign-in protects each user’s
+SQLAlchemy and PostgreSQL. Username/password sign-up and sign-in protect each user’s
 workspace. Browser requests use
 Next.js Server Actions and same-origin authentication routes; the API URL,
 service credential and database connection stay on the server.
+
+Live app: [leadflow.arkapravo.in](https://leadflow.arkapravo.in) ·
+[API readiness](https://api.leadflow.arkapravo.in/api/v1/health).
+Frontend changes deploy through Vercel CI/CD; backend changes deploy through Render
+CI/CD, using Neon PostgreSQL. The parent pins tested application commits.
 
 ## Repositories
 
@@ -34,14 +39,13 @@ Only Next.js has a host port. PostgreSQL persists in a named volume; FastAPI and
 PostgreSQL communicate on the Compose network. Development uses local PostgreSQL
 and does not consume the Neon URL in `backend/.env`.
 
-In another terminal, create your account. The password prompt does not echo or
-store plaintext credentials; choose your own username and password:
+Choose **Create account** on `/login`, or open `/signup`. Enter a username, a
+12–128 character password and its confirmation. Registration signs you in
+automatically to your own empty workspace. Existing users sign in at `/login`.
+The administrator CLI `docker compose exec backend uv run leadflow-create-user`
+remains available for private provisioning and legacy data claims.
 
-```sh
-docker compose exec backend uv run leadflow-create-user
-```
-
-Sign in at `/login`. To add optional deterministic sample leads to that account:
+To add optional deterministic sample leads to an existing account:
 
 ```sh
 docker compose exec backend uv run leadflow-seed
@@ -66,7 +70,7 @@ keeps data; adding `--volumes` deletes the local database.
 
 ## Features
 
-- Username/password login, Argon2id hashes, expiring/revocable sessions and per-user data.
+- Username/password sign-up and login, Argon2id hashes, expiring/revocable sessions and per-user data.
 - Create a lead with required name and optional company/phone.
 - Search names, filter by all six statuses and Today/Overdue/Unscheduled,
   and pin today's follow-ups.
@@ -107,7 +111,9 @@ See [API](docs/api.md) for routes and generated client types.
 
 Production: **Render API → Neon PostgreSQL; Vercel frontend → Render API**.
 Configure your public domain through `APP_URL`, with no source edits. Follow
-[deployment.md](docs/deployment.md) for exact service settings. Cloud deployment is left to you.
+[deployment.md](docs/deployment.md) for service settings and the configured domains.
+Deployment and provider configuration remain owner-managed; application pushes
+use the existing CI/CD integrations.
 
 The parent repository pins the independently published frontend/backend submodules
 using their full GitHub URLs. If you cloned without submodules, run:

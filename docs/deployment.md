@@ -4,6 +4,20 @@ Deploy the frontend repository to Vercel and backend repository to Render. Use
 Neon for PostgreSQL. No domain, provider host or credential is hardcoded in the
 application. The supplied configuration does not provision or deploy services.
 
+## Current deployment
+
+- Frontend: [leadflow.arkapravo.in](https://leadflow.arkapravo.in), Vercel CI/CD
+  from `LeadFlow-Frontend`. Set `APP_URL=https://leadflow.arkapravo.in`.
+- API: [api.leadflow.arkapravo.in](https://api.leadflow.arkapravo.in/api/v1/health),
+  Render CI/CD from `LeadFlow-Backend`. On Vercel, set the server-only
+  `BACKEND_API_URL=https://api.leadflow.arkapravo.in`.
+- Database: Neon, configured solely in Render’s private `DATABASE_URL`.
+
+Backend changes should deploy before frontend changes that require a new API
+route. Push tested changes inside each application repository, then update parent
+submodule pointers. Provider deployment remains owner-managed. Domains stay in
+environment configuration rather than application code.
+
 ## Neon
 
 Create a PostgreSQL database and copy its connection URL, preserving provider SSL
@@ -27,15 +41,17 @@ development dependencies. Leave the Docker command unset: `scripts/start.sh` run
 | `DATABASE_URL` | Neon connection string, including SSL options |
 | `BACKEND_API_KEY` | Random private credential, at least 16 characters |
 | `AUTH_SESSION_HOURS` | Fixed session lifetime, default 12 hours |
+| `SIGNUP_RATE_LIMIT` | Registration attempts per source per 15 minutes, default 20, range 1–1000 |
 | `PORT` | Provided by Render; optional override, default fallback 8000 |
 
 A Render Web Service has a public network address so Vercel can reach it. Domain
 routes require `X-API-Key` plus a valid user session; public API documentation is
 disabled. Health reveals only service readiness. Browser traffic never goes
-directly to Render. Username/password login issues opaque, database-backed
-sessions; each user sees
-only their own leads and discussions. In Render’s private shell, run
-`uv run leadflow-create-user` and enter your chosen credentials interactively.
+directly to Render. Username/password registration and login issue opaque,
+database-backed sessions; each user sees only their own leads and discussions.
+Users create accounts at the frontend’s `/signup`; registration starts an empty
+workspace. The optional Render shell command `uv run leadflow-create-user`
+remains available for private administrator provisioning.
 There is no default production account. For an existing database with unowned
 legacy leads, see [authentication](authentication.md) before claiming them.
 
@@ -62,7 +78,7 @@ if desired). Redeploy after changing environment values.
 None of these needs a `NEXT_PUBLIC_` prefix. Backend URL/key are read only from
 `server-only` modules. Server Actions validate payloads and send fixed-path API
 requests. SSR fetches use `no-store`; successful mutations revalidate the page.
-`APP_URL` supplies the metadata base and exact allowed login/logout origin; configure the same custom domain in Vercel's
+`APP_URL` supplies the metadata base and exact allowed sign-up/login/logout origin; configure the same custom domain in Vercel's
 Domains settings and your DNS. Changing an env variable does not change DNS.
 Next.js uses its normal same-origin Server Action protection; no permissive CORS
 or wildcard action origins are configured. Preview deployments should use their
@@ -83,7 +99,9 @@ unless you explicitly want synthetic sample data there.
 
 ## Verify after your deployment
 
-Check Vercel `/health`, then sign in with the account provisioned on Render. Create a synthetic lead, add a note/date, change its
+Check Vercel `/health`, open `/signup` and create your own account (or sign in
+with an existing one). Confirm the new workspace is empty, then create a
+synthetic lead, add a note/date, change its
 status and reload. Inspect browser network requests: all data interactions should
 be on the frontend origin. Verify light/dark persistence and your timezone. Rotate
 the service key on both providers together if it is ever disclosed.

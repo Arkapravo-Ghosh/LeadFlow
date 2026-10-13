@@ -8,6 +8,7 @@ All routes use `/api/v1`; interactive docs and public OpenAPI routes are disable
 | Method / path | Behavior |
 | --- | --- |
 | GET `/health` | Unauthenticated readiness; 503 if DB unavailable |
+| POST `/auth/signup` | Username/password (password: 12–128 characters); 201 with internal session; 409 duplicate, 422 invalid, 429 throttled; new account has no leads |
 | POST `/auth/login` | Username/password; internal token + expiry + safe user summary; 401 invalid, 429 throttled |
 | GET `/auth/me` | Current user ID/username; 401 expired/missing/disabled session |
 | POST `/auth/logout` | Revoke bearer session; 204, idempotent |
@@ -17,6 +18,13 @@ All routes use `/api/v1`; interactive docs and public OpenAPI routes are disable
 | PATCH `/leads/{id}` | Update `status` |
 | GET `/leads/{id}/discussions` | Newest-first timeline, or 404 |
 | POST `/leads/{id}/discussions` | `note`, optional aware `follow_up_at`; atomic save |
+
+The browser uses Next.js `/api/auth/signup` and `/api/auth/login`, with exact
+`APP_URL` origin checks. Sign-up also requires matching `confirmation` in the
+frontend request; only username/password reach FastAPI. Next.js sets the HTTP-only
+cookie and returns `{ ok: true }`, never the internal API token. The optional
+internal `X-Registration-Source` header carries a hashed trusted source for the
+registration budget; it is accepted only behind the private service key.
 
 Statuses: `new`, `contacted`, `qualified`, `proposal_sent`, `won`, `lost`.
 Names are trimmed, 1–120 characters; company 120, phone 40; note 1–5000. Naive

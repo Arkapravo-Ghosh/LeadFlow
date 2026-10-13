@@ -32,14 +32,17 @@ Alembic owns schema changes, never runtime `create_all`.
 ## Authentication and ownership
 
 `backend/auth` owns Argon2id password verification, opaque session issuance,
-expiry/revocation, database-backed failed-login counters and private CLI provisioning.
+expiry/revocation, database-backed login/registration counters and private CLI provisioning.
+`auth/repository.py` shares account insertion between registration and the CLI.
+Registration commits its account and first session together; only the CLI can
+claim legacy leads. New users start empty and optional seeding remains explicit.
 Only token digests persist in PostgreSQL. Next.js stores the bearer token in an
 HTTP-only cookie and forwards it from its server boundary; it never serializes
 the token into page props, action results or authentication JSON responses.
-Sign-in/out use Route Handlers so password values never enter Server Action
+Registration, login and logout use Route Handlers so password values never enter Server Action
 argument diagnostics. Every domain request resolves a live, active user; all lead
 queries include that user’s ID and discussion access checks the parent’s ownership.
-No user-specific server caching is used. Login/logout hard navigation clears
+No user-specific server caching is used. Account entry/logout hard navigation clears
 client/router state between accounts. See [authentication](authentication.md).
 
 ## Calendar rules
@@ -56,4 +59,5 @@ DST wall times. Notes without a date preserve the current schedule.
 Hand-written files have one responsibility and are generally below 200 lines.
 Shared UI primitives contain no API logic. Generated API types are intentionally
 larger. Domain tests cover real PostgreSQL transactions and date boundaries;
-frontend unit tests cover conversion/DST rules. See verification for runtime flows.
+frontend unit tests cover conversion/DST rules. Auth pages share a server-rendered
+shell and a focused client form with schema validation and password confirmation. See verification for runtime flows.

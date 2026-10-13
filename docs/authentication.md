@@ -1,14 +1,19 @@
 # Accounts and authentication
 
-Open `/login` and enter your username/password. Successful sign-in opens your
-workspace. The sign-out icon in the header revokes the current session and returns
+Open `/signup` (also linked from `/login`) to create an account with a username,
+password and confirmation. New accounts sign in immediately to an empty private
+workspace. Existing users open `/login` and enter their username/password.
+Successful sign-in opens your workspace. The sign-out icon in the header revokes the current session and returns
 to the login page. Other accounts cannot list, read or modify your leads or notes.
 Passwords are never displayed, prefilled, seeded, logged or included in repository
-environment examples. There is no public account registration endpoint.
+environment examples. Self-service registration cannot claim legacy data or seed
+leads. Usernames are unique regardless of letter case; a duplicate returns a
+readable error without changing the existing account.
 
-## Create accounts privately
+## Administrator account provisioning
 
-For a new local database, leave Compose running and use another terminal:
+Self-service sign-up is the usual path. Administrators can alternatively leave
+Compose running and use another terminal:
 
 ```sh
 docker compose exec backend uv run leadflow-create-user
@@ -52,23 +57,33 @@ not in this guide, Git, fixtures, screenshots or configuration.
 - Passwords use pwdlib’s recommended Argon2id settings with a fresh salt per hash.
 - Random 256-bit bearer sessions persist as SHA-256 token digests, never plaintext.
 - `AUTH_SESSION_HOURS` sets a fixed lifetime (12 by default; range 1–168). Login
-  cleans expired sessions; expiry and account activation are checked on every request.
+  and sign-up clean expired sessions; expiry and account activation are checked on every request.
 - Next.js sets an HTTP-only, SameSite=Lax, host-only cookie at path `/`; production
   requires HTTPS through Secure. Browser JavaScript never receives a session token.
-- Login/logout accept only POST requests from the exact `APP_URL` origin. Match
+- Sign-up/login/logout accept only POST requests from the exact `APP_URL` origin. Match
   scheme, hostname and port to the deployed frontend, including Preview environments.
 - Every lead/discussion request requires the private service key and a user session.
   Missing/expired/revoked sessions return 401; other users’ record IDs return 404.
 - Five failed attempts per normalized username in 15 minutes trigger a shared
   database-backed limit. Unknown usernames receive the same invalid-credentials
   message and password verification work. Successful login resets the counter.
+- `SIGNUP_RATE_LIMIT` bounds registration attempts per source in a 15-minute
+  database-backed window (20 by default; range 1–1000). Failed duplicates also
+  consume attempts. Next.js hashes Vercel’s protected client-IP header before
+  forwarding it through the private service boundary; raw IPs are not stored.
+  Outside Vercel, registration uses a shared bucket and ignores caller-supplied
+  forwarded headers. Sign-in and registration counters remain separate.
+- Account and first session are committed together; failed session creation rolls
+  back the account. A database unique constraint handles competing registrations.
+  Browser responses contain only `{ ok: true }`; the token stays in the cookie.
 - Logout revokes the current session; an unavailable API shows retry feedback
   rather than reporting a successful revocation. Other device sessions stay active.
 
-The backend account-creation CLI is deliberately administrator-only. Self-service
-registration, password recovery and multi-factor authentication are outside the
-requested username/password flow.
+The backend legacy claim option remains administrator-only. Password recovery,
+email verification and multi-factor authentication are outside this flow. There
+is no recovery endpoint; keep your chosen credentials securely.
 
-References: [FastAPI password hashing](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/),
+References: [Vercel request headers](https://vercel.com/docs/headers/request-headers#x-vercel-forwarded-for),
+[FastAPI password hashing](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/),
 [OWASP password storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html),
 [OWASP session management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html).

@@ -22,6 +22,7 @@ services:
       DATABASE_URL: postgresql://leadflow:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in the root .env}@postgres:5432/leadflow
       BACKEND_API_KEY: ${BACKEND_API_KEY:?Set BACKEND_API_KEY in the root .env}
       AUTH_SESSION_HOURS: ${AUTH_SESSION_HOURS:-12}
+      SIGNUP_RATE_LIMIT: ${SIGNUP_RATE_LIMIT:-20}
     depends_on:
       postgres:
         condition: service_healthy

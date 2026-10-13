@@ -9,6 +9,7 @@ services:
     environment:
       BACKEND_API_KEY: ${BACKEND_API_KEY:?Set BACKEND_API_KEY in the root .env}
       AUTH_SESSION_HOURS: ${AUTH_SESSION_HOURS:-12}
+      SIGNUP_RATE_LIMIT: ${SIGNUP_RATE_LIMIT:-20}
     command: >
       sh -c "uv run --no-dev alembic upgrade head &&
              uv run --no-dev uvicorn backend.main:app --host 0.0.0.0 --port 8000"
