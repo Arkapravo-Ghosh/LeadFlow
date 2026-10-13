@@ -1,0 +1,43 @@
+name: leadflow-production
+
+services:
+  backend:
+    build:
+      context: ./backend
+      target: production
+    env_file: ./backend/.env
+    environment:
+      BACKEND_API_KEY: ${BACKEND_API_KEY:?Set BACKEND_API_KEY in the root .env}
+    command: >
+      sh -c "uv run --no-dev alembic upgrade head &&
+             uv run --no-dev uvicorn backend.main:app --host 0.0.0.0 --port 8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=10)"]
+      interval: 20s
+      timeout: 12s
+      retries: 5
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        APP_URL: ${APP_URL:-http://localhost:3000}
+      target: production
+    environment:
+      BACKEND_API_URL: http://backend:8000
+      BACKEND_API_KEY: ${BACKEND_API_KEY:?Set BACKEND_API_KEY in the root .env}
+      APP_TIMEZONE: ${APP_TIMEZONE:-Asia/Kolkata}
+      APP_URL: ${APP_URL:-http://localhost:3000}
+    ports: ["127.0.0.1:${FRONTEND_PORT:-3000}:3000"]
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 20s
+      timeout: 15s
+      retries: 5
+      start_period: 30s

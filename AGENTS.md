@@ -2,14 +2,14 @@
 
 ## Scope and references
 
-This project lives in /Users/arkapravoghosh/Source Codes/LeadFlow.
+This project lives in the LeadFlow checkout.
 Read agentdocs/PLAN.md before implementation and agentdocs/email.txt for the
 original requirements. The three PNGs in agentdocs/ are suggested wireframes.
-Current state: planning only; preserve that scope until implementation is requested.
+Implementation is authorized. Read docs/architecture.md for current decisions.
 
 ## Architecture and readability
 
-Use one repository with frontend/ and backend/. Keep routes thin, views focused,
+Use the parent repository with frontend/ and backend/ Git submodules. Keep routes thin, views focused,
 business rules in services, database queries in repositories, and date rules in
 one dedicated module. Shared UI primitives must not contain feature or API logic.
 Avoid circular imports and generic abstraction frameworks.
