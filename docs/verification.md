@@ -231,3 +231,56 @@ images, not by creating production test users. Production registration writes
 and Vercel's trusted proxy-IP behavior were not exercised. The original local
 database still contains one account, seven owned leads and sixteen discussions;
 all disposable QA services/database containers were removed.
+
+## Landing page, branding and loading states — 14 October 2026
+
+The public `/` page now explains the shipped workflow using the existing shadcn
+Button styles, Badge and Separator, with explicitly fictional example leads.
+The private app moved to `/workspace`; auth redirects and mutation revalidation
+use this route. A shared L/arrow SVG appears before LeadFlow in page headers;
+the favicon contains matching 16/32/48px PNG images. The preset and theme tokens
+remain unchanged.
+
+ESLint, generated route types + TypeScript, and the Next.js production build
+passed. The production frontend Docker image built with the unchanged lockfile.
+Chrome/Playwright exercised the production images on an isolated Compose stack
+at port 3002 with disposable PostgreSQL. A QA-only proxy delayed real backend
+requests by 1.6 seconds to observe intermediate states; this delay is absent
+from application code.
+
+- Public landing CTAs, the getting-started anchor, desktop 1440×1000 and mobile
+  390×844, light/dark persistence, no horizontal overflow and unauthenticated
+  workspace-to-login redirection passed. Screenshots were inspected.
+- Auth, workspace and discussion skeletons appeared while requests were pending
+  and disappeared when ready. CSS pulse/spin animation was verified; reduced
+  motion disabled both. Signup, login, logout, lead/note saves and status changes
+  showed disabled/busy controls and animated spinners.
+- A rejected login cleared its spinner, re-enabled submission and retained the
+  draft. Lead, discussion and status edits persisted after reload. Browser
+  requests stayed on the frontend origin, with no unexpected console, runtime
+  or hydration errors. The only expected network error was the rejected login.
+- SVG and favicon requests returned 200; the favicon's three image sizes were
+  verified. Auth screenshots contain only blank placeholders; test credentials
+  were generated in memory and used only in the disposable database.
+- The original theme/preset and backend `.env` hashes are unchanged. Public
+  files and all three Git histories passed the private-value scan.
+
+The illustration is static example data, not an interactive demo. Pending retry
+controls were implemented but their failure/retry branch was not separately
+exercised in this pass. This is local production-image evidence for the complete
+credential/write flow; production QA uses only public pages and rejected/unauthenticated reads.
+
+Inspected local screenshots: [Landing in light mode](screenshots/landing-light.png),
+[Mobile landing in dark mode](screenshots/landing-mobile-dark.png), and
+[Sign-in skeleton](screenshots/loading-login.png).
+
+Vercel CI/CD reported deployment `dpl_GaSW4FgDuBCVBwPaGGmkpnx145gH` **READY**
+for frontend commit `5533aea496e9cfcaf765a61325a9da72f34bb0d2`.
+Chrome then verified the actual custom domain's landing page, account/home links,
+getting-started anchor, persisted dark mode, mobile layout, and unauthenticated
+`/workspace` redirect to `/login`. The live SVG and favicon bytes matched the
+committed assets. Frontend and backend health returned 200; the API reported
+`status: ok`. Live screenshots were inspected, browser traffic stayed on the
+frontend origin, and no console/runtime/hydration errors appeared. No production
+accounts or lead writes were used. All disposable QA containers were removed;
+the original three local Compose services remain healthy.

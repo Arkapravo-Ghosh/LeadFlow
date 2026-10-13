@@ -3,7 +3,8 @@
 Open `/signup` (also linked from `/login`) to create an account with a username,
 password and confirmation. New accounts sign in immediately to an empty private
 workspace. Existing users open `/login` and enter their username/password.
-Successful sign-in opens your workspace. The sign-out icon in the header revokes the current session and returns
+Successful sign-in opens `/workspace`. The public homepage remains available at
+`/` and includes account links and a product introduction. The sign-out icon in the header revokes the current session and returns
 to the login page. Other accounts cannot list, read or modify your leads or notes.
 Passwords are never displayed, prefilled, seeded, logged or included in repository
 environment examples. Self-service registration cannot claim legacy data or seed

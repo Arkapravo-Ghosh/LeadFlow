@@ -42,6 +42,8 @@ and does not consume the Neon URL in `backend/.env`.
 Choose **Create account** on `/login`, or open `/signup`. Enter a username, a
 12–128 character password and its confirmation. Registration signs you in
 automatically to your own empty workspace. Existing users sign in at `/login`.
+The public homepage explains LeadFlow before sign-up. Your private lead manager
+is at `/workspace`, and successful sign-in or sign-up opens it automatically.
 The administrator CLI `docker compose exec backend uv run leadflow-create-user`
 remains available for private provisioning and legacy data claims.
 
@@ -77,6 +79,8 @@ keeps data; adding `--volumes` deletes the local database.
 - Red overdue cues, latest note previews, relative times and discussion timeline.
 - Save notes and optional follow-ups atomically; change status immediately.
 - Light/dark/system support using the original shadcn palette and typography.
+- Public landing page with example workflow, shared LeadFlow logo and favicon.
+- Animated form/workspace/timeline skeletons and pending-action spinners; reduced-motion support.
 - Keyboard-accessible dialogs, inline validation, retry feedback, responsive UI.
 
 Follow-ups use UTC storage and `APP_TIMEZONE` for calendar input/display. A note

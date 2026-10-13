@@ -16,6 +16,19 @@ volume. No database or backend host port is published.
 
 ## Boundaries
 
+`/` is a static public landing page composed from `features/marketing`; its
+illustration uses explicitly labeled fictional data and never reads the backend.
+`/workspace` contains the authenticated server-streamed lead manager. Account
+entry redirects to this route, and lead mutations revalidate it. Branding links
+return to the public page. A shared SVG mark also supplies the raster favicon.
+
+Auth pages keep their shared shell outside Suspense and reserve form geometry
+with `AuthSkeleton`. The workspace reuses its header in `WorkspaceSkeleton`.
+Skeletons/spinners use the installed shadcn primitives, expose loading/busy
+states, and disable animation for reduced-motion preferences. Pending controls
+stay disabled through completion; auth navigation retains its spinner until
+the next document loads. No minimum artificial loading delay is added.
+
 Frontend `features/leads/server` owns reads/actions. `lib/server` is marked
 `server-only`; validated actions return data and safe messages, never credentials.
 OpenAPI-generated types describe API responses. Client components own interaction
