@@ -144,3 +144,21 @@ images need updating, then `docker compose up --watch` for normal development.
 `docker compose config --quiet` passed after removing the policy. This correction
 changed only Compose configuration and documentation; no additional rebuild or
 database operation was needed.
+
+
+## Vercel install dependency correction — 14 October 2026
+
+A fresh install with peer-dependency checks enabled reproduced the reported
+`ERESOLVE`: the frontend declared `@types/node` 20 while Vitest 5 required Node
+22 or 24+ type definitions. Local npm's `legacy-peer-deps` setting had masked
+that mismatch. The frontend now declares `@types/node` 24.19.2 and a lockfile
+resolved with peer checks enabled. No framework or theme changes were needed.
+
+Clean-checkout validation also found that plain `tsc` needed Next.js-generated
+`LayoutProps`. The typecheck script now runs `next typegen` before `tsc --noEmit`.
+
+A disposable Linux amd64 Compose container with Node 24.21.0 and npm 11.19.0
+passed `npm install` and `npm ci` with `legacy-peer-deps=false` and `force=false`,
+then ESLint, type checking, all 6 unit tests and the Next.js production build.
+The resulting lockfile matched the committed frontend lockfile. This is clean
+Linux install/build evidence; a new Vercel deployment was not manually triggered.

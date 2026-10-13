@@ -47,6 +47,8 @@ No automatic production seed. Back up data before future schema changes.
 
 Import the frontend repository; framework Next.js, root directory repository root,
 install `npm ci`, build `npm run build`. Use the Node 24 runtime to match Docker.
+The frontend declares matching Node 24 types compatible with Vitest 5; keep
+`package-lock.json` committed so installs use the verified dependency graph.
 Set these variables for the Production environment (and separately for Preview
 if desired). Redeploy after changing environment values.
 
