@@ -73,8 +73,12 @@ Today's leads sort by due time, then overdue leads, then recent discussions.
 Local datetime input is converted with Temporal and rejects ambiguous/nonexistent
 DST wall times. Notes without a date preserve the current schedule.
 The shadcn Calendar/Popover date picker uses `TZDate` and the app timezone,
-independently of the browser timezone. A separate time field composes the local
-datetime; server validation rejects incomplete selections before UTC conversion.
+independently of the browser timezone. `TimePicker` composes existing shadcn
+Selects for hour, minute and AM/PM; it uses no native `type="time"` control.
+`lib/time-input.ts` handles 12/24-hour conversion and retains partial selections.
+The parent combines date and time; server validation rejects incomplete selections
+before UTC conversion. Display state follows the controlled value, so successful
+saves reset every segment without effects or forced remounts.
 
 ## Public discovery
 

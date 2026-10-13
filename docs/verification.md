@@ -339,3 +339,47 @@ byte-for-byte. No live account/lead writes were performed. Stable dark-mode
 mobile/tablet/desktop workspace screenshots were inspected from the local
 production images; transient closing menus were excluded from those captures.
 The disposable Compose project/database was removed after verification.
+
+## Fully themed time picker — 14 October 2026
+
+The calendar's companion field still used a native `type="time"` popup. It now
+composes the installed shadcn Selects for hour, minute and AM/PM, with FieldSet /
+FieldLegend grouping, individual labels, 44px triggers/items and height-limited
+scrollable menus. The MCP registry search returned no standalone time-picker
+item; no third-party registry, dependency, preset or theme change was introduced.
+
+`lib/time-input.ts` handles 12/24-hour conversion and partial selections. A minute
+chosen before an hour is retained. Successful saves reset all display segments;
+server validation handles incomplete values. Midnight maps to 00:00, noon to
+12:00, and PM hours retain the chosen calendar date in the application timezone.
+
+- ESLint, Next-generated route types + TypeScript, **20 frontend tests** and the
+  production build passed. Seven additional cases cover AM/PM boundaries,
+  partial selections, round-trips and timezone conversion. Production Docker
+  images reached healthy state with the unchanged dependency lockfile.
+- Chrome/Playwright exercised real FastAPI/PostgreSQL on an isolated production
+  Compose project at port 3002, using a Los Angeles browser timezone and the
+  application's Asia/Kolkata zone. Native time/datetime inputs were absent.
+- Hour, minute and period menus stayed on screen at 320×568, 375×812, 390×844,
+  768×1024, 1024×768 and 1440×1000. Keyboard End selected minute 59, Escape returned
+  focus to the trigger, and selections survived viewport changes. Light/dark
+  screenshots were inspected outside the public repositories.
+- An incomplete follow-up returned inline validation and retained the note.
+  Selecting 01:34 PM saved and survived reload. A direct database check confirmed
+  `2026-10-24T08:04:00+00:00`, the expected Kolkata-to-UTC instant. A QA-only
+  800ms request delay verified that date/hour/minute/period controls disable while
+  saving. The delay is outside application code. No unexpected console, runtime
+  or hydration errors appeared; browser requests remained on the frontend origin.
+- The shadcn theme/preset and backend `.env` hashes remained unchanged. Backend
+  code and dependencies did not change. Test credentials existed only in process
+  memory and the disposable database; no production accounts or leads were used.
+
+The Browser plugin was unavailable, so regular Chrome/Playwright was used.
+Physical devices, iOS Safari and screen-reader behavior were not exercised.
+
+Vercel CI/CD deployment `dpl_6y6M7K6mBAihcGn8W6ufkdRDAgsw` reported **READY**
+for frontend commit `8647fbe8032ab60e25b0d9d9e568b4b5add2aa61`.
+The private-value source/history scan passed. All disposable time-picker Compose
+services and their tmpfs database were removed. Production credential/write
+flows were not exercised; the authenticated UI evidence above comes from the
+local production images.

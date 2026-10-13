@@ -78,7 +78,7 @@ keeps data; adding `--volumes` deletes the local database.
   and pin today's follow-ups.
 - Red overdue cues, latest note previews, relative times and discussion timeline.
 - Save notes and optional follow-ups atomically; change status immediately.
-- Themed shadcn calendar and time field for follow-ups in the configured timezone.
+- Themed shadcn calendar and hour/minute/AM-PM selectors for follow-ups in the configured timezone.
 - Light/dark/system support using the original shadcn palette and typography.
 - Public landing page with example workflow, shared LeadFlow logo and favicon.
 - Public-page SEO metadata, dark landing screenshot for social previews, sitemap and robots.
