@@ -52,10 +52,12 @@ The seed supplies six leads covering every status, twelve discussions, today's
 follow-ups and overdue dates. Running it again preserves existing records. It is
 explicitly opt-in; production startup never seeds data.
 
-Application services use `pull_policy: build`, so even plain `docker compose up`
-builds the current checkout before startup. Cached build layers are reused. This
-keeps startup migrations aligned with the persistent database after Watch sessions
-or Git updates. Use `docker compose up --watch` for ongoing file tracking.
+Use `docker compose up --watch` for normal development. If saved images are stale
+after Git updates or a previous Watch session, use
+`docker compose up --build --watch` once to update them. Watch syncs running
+containers; those edits do not update the saved images used to recreate containers.
+Compose retains normal image reuse; rebuilds are explicitly requested with `--build`
+or triggered by the configured Watch rules.
 
 Compose syncs source edits; Next.js and Uvicorn reload them. Migration changes
 restart the API and dependency/Dockerfile changes rebuild the relevant image.

@@ -132,15 +132,15 @@ the database was already at `0002`, while the saved development backend image
 contained only `0001`. Watch had synced new files into the previous running
 container, but those files were absent from the old image used to recreate it.
 
-The development backend and frontend now use `pull_policy: build`, which builds
-the current checkout before startup while reusing unchanged build layers. This
-keeps both applications current without requiring an explicit `--build` flag.
-The production Compose file and database volume configuration are unchanged.
-See [Docker's build policy](https://docs.docker.com/reference/compose-file/services/#pull_policy).
+Rebuilding the development images restored startup. Alembic's current revision
+and code head both reported `0002`, and all three services reached healthy status.
+The running backend used the newly built saved image. Frontend `/login` returned
+200, and `/health` returned `ok`. The original account, all 7 owned leads and all
+16 discussions remained present; no data reset or migration stamp was used.
 
-`docker compose config --quiet` passed. `docker compose up -d --wait` without
-`--build` rebuilt the applications and reached healthy status for all three
-services. Alembic's current revision and code head both reported `0002`. The
-running backend used the newly built saved image. Frontend `/login` returned 200,
-and `/health` returned `ok`. The original account, all 7 owned leads and all 16
-discussions remained present; no data reset or migration stamp was used.
+The temporary forced-build policy was removed following the owner's correction.
+Compose retains normal image reuse. Use `docker compose up --build --watch` when
+images need updating, then `docker compose up --watch` for normal development.
+`docker compose config --quiet` passed after removing the policy. This correction
+changed only Compose configuration and documentation; no additional rebuild or
+database operation was needed.

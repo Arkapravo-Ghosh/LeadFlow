@@ -15,8 +15,6 @@ services:
       retries: 20
 
   backend:
-    # Watch syncs containers, not saved images; rebuild before startup migrations.
-    pull_policy: build
     build:
       context: ./backend
       target: development
@@ -53,7 +51,6 @@ services:
           path: ./backend/Dockerfile
 
   frontend:
-    pull_policy: build
     build:
       context: ./frontend
       args:
