@@ -106,7 +106,9 @@ npm run build
 
 API tests use an isolated disposable PostgreSQL database, never the application
 or Neon database. See [verification](docs/verification.md) for actual results and
-screenshots. See the [final assessment comparison](docs/requirements-audit.md)
+screenshots. The [numbered dark-mode working flow](docs/screenshots/README.md)
+contains 15 visually reviewed desktop, laptop, tablet and mobile screenshots in sequence.
+See the [final assessment comparison](docs/requirements-audit.md)
 for the original requirements and bonus checklist. See [authentication](docs/authentication.md) for account setup and legacy data.
 See [API](docs/api.md) for routes and generated client types.
 

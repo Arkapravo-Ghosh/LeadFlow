@@ -38,7 +38,7 @@ Checked 14 October 2026 against the original assessment stored locally in
 | Required environment examples | Present in all three repositories; setup and deployment variables documented. Local/production credentials and original correspondence are excluded from tracked files. Current private DB/service values were absent from public files and Git histories. |
 | README with working setup | Passed: fresh recursive public clone, generated local secrets, migrations and healthy development Compose stack. All three READMEs link the public repositories. |
 | Meaningful Git history | Present: project commits follow Conventional Commits; the owner’s initial Create Next App scaffold commit remains unchanged. |
-| Video / screenshots of working flow | Present: eight screenshots already published under docs/screenshots. Fresh current workspace/add/timeline screenshots are also provided in the local submission ZIP. A video is optional because the brief accepts screenshots. |
+| Video / screenshots of working flow | Present: 15 freshly captured, visually reviewed dark-mode screenshots under docs/screenshots, numbered in sequence from landing through workspace, lead creation, discussion/follow-up, pickers, saved results, filters and laptop/tablet/mobile views. The local submission ZIP contains the same images. A video is optional because the brief accepts screenshots. |
 | Clear AI-assistance disclosure | Present in docs/verification.md. The API uses FastAPI; the brief permits any stack and its FastAI preference was interpreted as FastAPI. No ML feature is claimed. |
 
 ## Final verification

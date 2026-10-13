@@ -35,13 +35,10 @@ were fixed and rechecked.
 
 ## Screenshots
 
-Captured from working production images with synthetic data:
-
-- [Light workspace](screenshots/light.png)
-- [Dark workspace](screenshots/dark.png)
-- [Add lead](screenshots/add-lead.png)
-- [Discussion timeline](screenshots/timeline.png)
-- [Small-screen follow-up form](screenshots/mobile-timeline.png)
+The original screenshots have been replaced by the
+[current numbered dark-mode working flow](screenshots/README.md), captured and
+visually reviewed on 14 October 2026 from the local production frontend image
+and real FastAPI/PostgreSQL services with synthetic data.
 
 ## Known limits
 
@@ -270,9 +267,10 @@ controls were implemented but their failure/retry branch was not separately
 exercised in this pass. This is local production-image evidence for the complete
 credential/write flow; production QA uses only public pages and rejected/unauthenticated reads.
 
-Inspected local screenshots: [Landing in light mode](screenshots/landing-light.png),
-[Mobile landing in dark mode](screenshots/landing-mobile-dark.png), and
-[Sign-in skeleton](screenshots/loading-login.png).
+Historical captures inspected in this pass: landing in light mode, mobile landing
+in dark mode, and the sign-in skeleton. The submission folder now contains the
+[current numbered dark-mode captures](screenshots/README.md); the earlier files
+remain available in Git history.
 
 Vercel CI/CD reported deployment `dpl_GaSW4FgDuBCVBwPaGGmkpnx145gH` **READY**
 for frontend commit `5533aea496e9cfcaf765a61325a9da72f34bb0d2`.
