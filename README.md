@@ -4,13 +4,21 @@ A single-screen lead manager built with Next.js, the existing shadcn theme, Fast
 SQLAlchemy and PostgreSQL. Browser requests use Next.js Server Actions; the API URL,
 service credential and database connection stay on the server.
 
+## Repositories
+
+| Repository | Purpose |
+| --- | --- |
+| [LeadFlow](https://github.com/Arkapravo-Ghosh/LeadFlow) | Parent: Compose, documentation and submodule versions |
+| [LeadFlow-Frontend](https://github.com/Arkapravo-Ghosh/LeadFlow-Frontend) | Next.js frontend, deployed to Vercel |
+| [LeadFlow-Backend](https://github.com/Arkapravo-Ghosh/LeadFlow-Backend) | FastAPI backend, deployed to Render |
+
 ## Run locally
 
 Requirements: Docker Desktop with Compose Watch support, Git, and optionally Node
 and uv for host checks. Both application directories are Git submodules.
 
 ```sh
-git clone --recurse-submodules <your-parent-repository-url> LeadFlow
+git clone --recurse-submodules https://github.com/Arkapravo-Ghosh/LeadFlow.git
 cd LeadFlow
 cp .env.example .env
 # Replace BACKEND_API_KEY and POSTGRES_PASSWORD with random hex values.
@@ -80,13 +88,24 @@ screenshots. See [API](docs/api.md) for routes and generated client types.
 
 Production: **Render API → Neon PostgreSQL; Vercel frontend → Render API**.
 Configure your public domain through `APP_URL`, with no source edits. Follow
-[deployment.md](docs/deployment.md) for exact service settings. Deployment and
-remote publication are left to you.
+[deployment.md](docs/deployment.md) for exact service settings. Cloud deployment is left to you.
 
-The parent repository tracks independent frontend/backend submodules. Publish
-these as sibling `LeadFlow`, `LeadFlow-frontend` and `LeadFlow-backend` repositories
-or update `.gitmodules` to your chosen URLs before sharing a public clone. Commit
-child repositories first, then the parent pointers. Existing initialization
-history is preserved. Run `./scripts/install-hooks.sh` to enforce
+The parent repository pins the independently published frontend/backend submodules
+using their full GitHub URLs. If you cloned without submodules, run:
+
+```sh
+git submodule update --init --recursive
+```
+
+To update an existing checkout to the parent's latest pinned versions:
+
+```sh
+git pull --ff-only
+git submodule update --init --recursive
+```
+
+Commit and push changes inside each application repository first, then commit and
+push its updated pointer in the parent. Existing initialization history is
+preserved. Run `./scripts/install-hooks.sh` to enforce
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) locally.
 Hand-written modules stay focused and small; generated types are an exception.

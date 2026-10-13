@@ -56,8 +56,8 @@ patterns through those development tools.
 
 Starlette's test client emitted an upstream `httpx` deprecation warning; the
 integration assertions passed. The app is a shared assignment workspace without
-end-user login (optional in the brief). Public repository creation, DNS and cloud
-deployment are deliberately left for the owner. Provider-specific runtime behavior
+end-user login (optional in the brief). The three repositories are published on GitHub; DNS and cloud
+deployment remain for the owner. Provider-specific runtime behavior
 must be checked after deployment using the steps in deployment.md.
 
 ## AI assistance

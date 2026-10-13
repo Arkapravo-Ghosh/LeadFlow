@@ -1,6 +1,6 @@
 [submodule "frontend"]
 	path = frontend
-	url = ../LeadFlow-frontend.git
+	url = https://github.com/Arkapravo-Ghosh/LeadFlow-Frontend.git
 [submodule "backend"]
 	path = backend
-	url = ../LeadFlow-backend.git
+	url = https://github.com/Arkapravo-Ghosh/LeadFlow-Backend.git
